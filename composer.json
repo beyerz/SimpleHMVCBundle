@@ -1,0 +1,13 @@
+{
+    "name": "beyerz/simple-hmvc-bundle",
+    "description": "Simple HMVC bundle for symfony",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lance Bailey",
+            "email": "bailz777@gmail.com"
+        }
+    ],
+    "require": {}
+}
