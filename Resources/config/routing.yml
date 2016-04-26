@@ -1,0 +1,3 @@
+beyerz_simple_hmvc_homepage:
+    path:     /
+    defaults: { _controller: BeyerzSimpleHMVCBundle:Default:index }
