@@ -1,0 +1,27 @@
+<?php
+/**
+ * Generated using beyerz\SimpleHMVCBundle Generator
+ */
+
+namespace {{ namespace }}\Tests\Controller\{{ controller_namespace_suffix }};;
+
+{% block use_statements %}
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+{% endblock use_statements %}
+
+{% block class_definition %}
+class {{ class_name }}ControllerTest extends WebTestCase
+{% endblock class_definition %}
+{
+{% block class_body %}
+{% for action in actions %}
+    public function test{{ action.basename|capitalize }}()
+    {
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '{{ action.route }}');
+    }
+
+{% endfor -%}
+{% endblock class_body %}
+}

@@ -1,0 +1,9 @@
+{{ '{% extends "::base.html.twig" %}' }}
+
+{{ '{% block title %}' -}}
+{{ bundle }}:{{ element }}:{{ class_name }}
+{{- '{% endblock %}' }}
+
+{{ '{% block body %}' }}
+<h1>Welcome to the {{ element }}:{{ class_name }} page</h1>
+{{ '{% endblock %}' }}

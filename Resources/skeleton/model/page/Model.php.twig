@@ -1,0 +1,51 @@
+<?php
+/**
+ * Generated using beyerz\SimpleHMVCBundle Generator
+ */
+
+namespace {{ namespace }}\Model\{{ support_namespace_suffix }};
+
+{% block use_statements %}
+use Beyerz\SimpleHMVCBundle\Model\Page\PageModel;
+use {{ namespace }}\Context\{{ support_namespace_suffix }}\{{ action_class_name }}Context;
+{% endblock use_statements %}
+
+{% block class_definition %}
+class {{ action_class_name }}Model extends PageModel
+{% endblock class_definition %}
+{
+{% block class_body %}
+
+    /**
+     * @return $this
+     */
+    public function registerElements()
+    {
+        return $this;
+    }
+
+     /**
+     * @return {{ action_class_name }}Context
+     */
+    public function buildContext(){
+        return new {{ action_class_name }}Context();
+    }
+
+    /**
+     * @return array
+     */
+    public static function javascripts()
+    {
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    public static function stylesheets()
+    {
+        return [];
+    }
+
+{% endblock class_body %}
+}

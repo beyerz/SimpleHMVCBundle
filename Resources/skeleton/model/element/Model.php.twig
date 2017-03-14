@@ -1,0 +1,51 @@
+<?php
+/**
+ * Generated using beyerz\SimpleHMVCBundle Generator
+ */
+
+namespace {{ namespace }}\Model\{{ element_namespace_suffix }};
+
+{% block use_statements %}
+use Beyerz\SimpleHMVCBundle\Model\Element\ElementModel;
+use {{ namespace }}\Context\{{ use_path }}Context;
+{% endblock use_statements %}
+
+{% block class_definition %}
+class {{ class_name }}Model extends ElementModel
+{% endblock class_definition %}
+{
+{% block class_body %}
+
+    /**
+     * @return $this
+     */
+    public function registerElements()
+    {
+        return $this;
+    }
+
+     /**
+     * @return {{ class_name }}Context
+     */
+    public function buildContext(){
+        return new {{ class_name }}Context();
+    }
+
+    /**
+     * @return array
+     */
+    public static function javascripts()
+    {
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    public static function stylesheets()
+    {
+        return [];
+    }
+
+{% endblock class_body %}
+}

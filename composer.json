@@ -1,13 +1,30 @@
 {
     "name": "beyerz/simple-hmvc-bundle",
-    "description": "Simple HMVC bundle for symfony",
+    "description": "Symfony bundle to support the HMVC design pattern",
     "type": "symfony-bundle",
-    "license": "MIT",
     "authors": [
         {
             "name": "Lance Bailey",
-            "email": "bailz777@gmail.com"
+            "homepage": "http://www.me-vs-php.com"
         }
     ],
-    "require": {}
+    "keywords": [
+        "Symfony",
+        "Symfony2",
+        "HMVC",
+        "Hierarchical model view controller",
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.5",
+        "symfony/symfony": "2.8.*"
+    },
+    "require-dev" :{
+        "symfony/phpunit-bridge": "~3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Beyerz\\SimpleHMVCBundle\\": ""
+        }
+    }
 }
