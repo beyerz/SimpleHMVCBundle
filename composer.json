@@ -12,7 +12,7 @@
         "Symfony",
         "Symfony2",
         "HMVC",
-        "Hierarchical model view controller",
+        "Hierarchical model view controller"
     ],
     "license": "MIT",
     "require": {
