@@ -89,14 +89,14 @@ EOT
         $bundle = $input->getOption('bundle');
         if(preg_match('/^(Page)/',$input->getOption("path"))){
             if(strpos($input->getOption("path"),"/")){
-                $path = substr($input->getOption("path"),strpos($input->getOption("path"),"/"));
+                $path = substr($input->getOption("path"),strpos($input->getOption("path"),"/")+1);
             }
             else{
                 $path = "";
             }
         }
         $controller = $input->getOption('controller');
-        $shortNotation = $bundle . ":" . $path . $controller;
+        $shortNotation = $bundle . ":" . (empty($path)?"":$path . DIRECTORY_SEPARATOR) . $controller;
         list($bundle, $path, $controller) = $this->parseShortcutNotation($shortNotation);
 
         $controller = is_null($path)?"":$path . DIRECTORY_SEPARATOR . $controller;

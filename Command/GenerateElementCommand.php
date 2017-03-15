@@ -90,15 +90,14 @@ EOT
         $bundle = $input->getOption('bundle');
         if(preg_match('/^(Element)/',$input->getOption("path"))){
             if(strpos($input->getOption("path"),"/")){
-                $path = substr($input->getOption("path"),strpos($input->getOption("path"),"/"));
+                $path = substr($input->getOption("path"),strpos($input->getOption("path"),"/")+1);
             }
             else{
                 $path = "";
             }
         }
         $element = $input->getOption('element');
-
-        $shortNotation = $bundle . ":" . $path . $element;
+        $shortNotation = $bundle . ":" . (empty($path)?"":$path . DIRECTORY_SEPARATOR) . $element;
         list($bundle, $path, $element) = $this->parseShortcutNotation($shortNotation);
         $element = is_null($path)?"":$path . DIRECTORY_SEPARATOR . $element;
         if (is_string($bundle)) {
