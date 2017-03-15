@@ -86,13 +86,19 @@ EOT
         if (null === $input->getOption('controller')) {
             throw new \RuntimeException('The controller option must be provided.');
         }
-
         $bundle = $input->getOption('bundle');
-        $path = !is_null($input->getOption("path")) ? str_replace("Page/", "", $input->getOption("path")) . DIRECTORY_SEPARATOR : "";
+        if(preg_match('/^(Page)/',$input->getOption("path"))){
+            if(strpos($input->getOption("path"),"/")){
+                $path = substr($input->getOption("path"),strpos($input->getOption("path"),"/"));
+            }
+            else{
+                $path = "";
+            }
+        }
         $controller = $input->getOption('controller');
-
         $shortNotation = $bundle . ":" . $path . $controller;
         list($bundle, $path, $controller) = $this->parseShortcutNotation($shortNotation);
+
         $controller = is_null($path)?"":$path . DIRECTORY_SEPARATOR . $controller;
         if (is_string($bundle)) {
             $bundle = Validators::validateBundleName($bundle);
@@ -107,6 +113,7 @@ EOT
         $questionHelper->writeSection($output, 'Controller generation');
 
         $generator = $this->getGenerator($bundle);
+
         $generator->generate($bundle, $controller, $input->getOption('route-format'), $input->getOption('template-format'), $this->parseActions($input->getOption('actions')));
 
         $output->writeln('Generating the bundle code: <info>OK</info>');
