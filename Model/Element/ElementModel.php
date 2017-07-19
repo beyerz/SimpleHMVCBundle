@@ -11,10 +11,9 @@
 namespace Beyerz\SimpleHMVCBundle\Model\Element;
 
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Beyerz\SimpleHMVCBundle\Context\Element\ElementContextInterface;
-use Beyerz\SimpleHMVCBundle\Context\Page\PageContextInterface;
 use Beyerz\SimpleHMVCBundle\Input\Element\ElementInputInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\Form\Form;
@@ -52,6 +51,7 @@ abstract class ElementModel
 
     /**
      * ElementModel constructor.
+     *
      * @param ElementInputInterface $input
      */
     public function __construct(ElementInputInterface $input)
@@ -71,25 +71,30 @@ abstract class ElementModel
         return $this;
     }
 
-    public function registerJavascriptParameter($key, $value){
-        $this->javascriptParameters->set($key,$value);
+    public function registerJavascriptParameter($key, $value)
+    {
+        $this->javascriptParameters->set($key, $value);
+
         return $this;
     }
 
-    private function getElements(){
+    private function getElements()
+    {
         if (is_null($this->elements)) {
             $this->elements = new ArrayCollection();
         }
+
         return $this->elements;
     }
 
     /**
      * @param ElementContextInterface $context
+     *
      * @return ElementContextInterface
      */
     public function compile(ElementContextInterface $context)
     {
-        if($this->validate($this, $context)) {
+        if ($this->validate($this, $context)) {
             //add javascripts
             $context->setJavascripts($this->loadJavascripts());
             //add stylesheets
@@ -97,7 +102,7 @@ abstract class ElementModel
             //set view path
             $context->setViewPath($this->generateViewPath());
             //set Javascript Parameters
-            $context->setJavascriptParameters(array_merge($context->getJavascriptParameters(),$this->javascriptParameters->all()));
+            $context->setJavascriptParameters(array_merge($context->getJavascriptParameters(), $this->javascriptParameters->all()));
 
 
             //load elements
@@ -121,41 +126,51 @@ abstract class ElementModel
         }
     }
 
-    private function validate(ElementModel $model, ElementContextInterface $context){
+    private function validate(ElementModel $model, ElementContextInterface $context)
+    {
         //validate the model name
         $modelNS = get_class($model);
-        if(!preg_match('/(Model)$/', $modelNS)){
+        if (!preg_match('/(Model)$/', $modelNS)) {
             throw new \Exception(sprintf("Models must end with word Model, invalid model: %s", $modelNS));
         }
 
         $contextNS = get_class($context);
-        if(!preg_match('/(Context)$/', $contextNS)){
+        if (!preg_match('/(Context)$/', $contextNS)) {
             throw new \Exception(sprintf("Contexts must end with word Context, invalid context: %s", $contextNS));
         }
+
         return true;
     }
 
-    private function generateViewPath(){
+    private function generateViewPath()
+    {
         $ns = get_class($this);
-        $ns = preg_replace('/(Model)/','',$ns);
-        $parts = preg_split('/Bundle/',$ns);
-        $bundle = sprintf("%sBundle",str_replace("\\","",$parts[0]));
-        $parts = array_filter(explode("\\",$parts[1]));
-        $format = "%s:%s:%s.html.twig";
-        unset($parts[0]);
-        $viewPath = sprintf($format,$bundle,implode("\\",array_splice($parts,0,count($parts)-1)),lcfirst($parts[count($parts)-1]));
+        $ns = preg_replace('/(Model)/', '', $ns);
+        $parts = preg_split('/Bundle/', $ns);
+        $bundle = sprintf("%sBundle", str_replace("\\", "", $parts[0]));
+        $bundle = $this->container->get('kernel')->getBundle($bundle);
+        $parts = array_filter(explode("\\", $parts[1]));
+        //re-index the array
+        $parts = array_values($parts);
+        $templateFormat = "twig";
+        $pathToView = implode("\\", array_splice($parts, 0, count($parts) - 1));
+        $template = $bundle->getName() . ':' . $pathToView . ':' .
+            strtolower(preg_replace(['/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'], ['\\1_\\2', '\\1_\\2'], $parts[count($parts) - 1]))
+            . '.html.' . $templateFormat;
         $loader = $this->container->get('twig.loader');
-        if(!$loader->exists($viewPath)){
-            throw new \Exception(sprintf("Non existant view for model: %s, Expecting View at: %s",get_class($this),$viewPath));
+        if (!$loader->exists($template)) {
+            throw new \Exception(sprintf("Non existant view for model: %s, Expecting View at: %s", get_class($this), $template));
         }
-        return $viewPath;
+        return $template;
     }
 
-    private function loadJavascripts(){
+    private function loadJavascripts()
+    {
         return static::javascripts();
     }
 
-    private function loadStylesheets(){
+    private function loadStylesheets()
+    {
         return static::stylesheets();
     }
 
@@ -169,6 +184,7 @@ abstract class ElementModel
 
     /**
      * @param ElementInputInterface $input
+     *
      * @return ElementModel
      */
     public function setInput(ElementInputInterface $input)
@@ -210,7 +226,7 @@ abstract class ElementModel
      *
      * @see UrlGeneratorInterface
      */
-    public function generateUrl($route, $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
+    public function generateUrl($route, $parameters = [], $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
     {
         return $this->container->get('router')->generate($route, $parameters, $referenceType);
     }
@@ -270,7 +286,7 @@ abstract class ElementModel
      *
      * @return Form
      */
-    public function createForm($type, $data = null, array $options = array())
+    public function createForm($type, $data = null, array $options = [])
     {
         return $this->container->get('form.factory')->create($type, $data, $options);
     }
@@ -278,12 +294,12 @@ abstract class ElementModel
     /**
      * Creates and returns a form builder instance.
      *
-     * @param mixed $data The initial data for the form
+     * @param mixed $data    The initial data for the form
      * @param array $options Options for the form
      *
      * @return FormBuilder
      */
-    public function createFormBuilder($data = null, array $options = array())
+    public function createFormBuilder($data = null, array $options = [])
     {
         if (method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix')) {
             $type = 'Symfony\Component\Form\Extension\Core\Type\FormType';
@@ -299,6 +315,7 @@ abstract class ElementModel
 
     /**
      * @param $id
+     *
      * @return object
      */
     protected function get($id)
