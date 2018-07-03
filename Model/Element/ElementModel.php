@@ -64,7 +64,7 @@ abstract class ElementModel
     public function registerElement($name, ElementModel $element)
     {
         $elements = $this->getElements();
-        if (!$elements->containsKey($name)) {
+        if ( !$elements->containsKey($name) ) {
             $elements->set($name, $element);
         }
 
@@ -80,7 +80,7 @@ abstract class ElementModel
 
     private function getElements()
     {
-        if (is_null($this->elements)) {
+        if ( is_null($this->elements) ) {
             $this->elements = new ArrayCollection();
         }
 
@@ -94,7 +94,7 @@ abstract class ElementModel
      */
     public function compile(ElementContextInterface $context)
     {
-        if ($this->validate($this, $context)) {
+        if ( $this->validate($this, $context) ) {
             //add javascripts
             $context->setJavascripts($this->loadJavascripts());
             //add stylesheets
@@ -112,11 +112,11 @@ abstract class ElementModel
                 $element->registerElements();
                 $elementContext = $element->buildContext();
                 $compiled = $element->compile($elementContext);
-                $context->setJavascripts(array_unique(array_merge($compiled->getJavascripts(), $context->getJavascripts())));
+                $context->setJavascripts(array_unique(array_merge($context->getJavascripts(), $compiled->getJavascripts())));
                 $compiled->setJavascripts([]);
-                $context->setStylesheets(array_unique(array_merge($compiled->getStylesheets(), $context->getStylesheets())));
+                $context->setStylesheets(array_unique(array_merge($context->getStylesheets(), $compiled->getStylesheets())));
                 $compiled->setStylesheets([]);
-                $context->setJavascriptParameters(array_merge($compiled->getJavascriptParameters(), $context->getJavascriptParameters()));
+                $context->setJavascriptParameters(array_merge($context->getJavascriptParameters(), $compiled->getJavascriptParameters()));
                 $compiled->setJavascriptParameters([]);
 
                 $context->addElement($name, $compiled->toArray());
@@ -130,12 +130,12 @@ abstract class ElementModel
     {
         //validate the model name
         $modelNS = get_class($model);
-        if (!preg_match('/(Model)$/', $modelNS)) {
+        if ( !preg_match('/(Model)$/', $modelNS) ) {
             throw new \Exception(sprintf("Models must end with word Model, invalid model: %s", $modelNS));
         }
 
         $contextNS = get_class($context);
-        if (!preg_match('/(Context)$/', $contextNS)) {
+        if ( !preg_match('/(Context)$/', $contextNS) ) {
             throw new \Exception(sprintf("Contexts must end with word Context, invalid context: %s", $contextNS));
         }
 
@@ -155,12 +155,13 @@ abstract class ElementModel
         $templateFormat = "twig";
         $pathToView = implode("\\", array_splice($parts, 0, count($parts) - 1));
         $template = $bundle->getName() . ':' . $pathToView . ':' .
-            strtolower(preg_replace(['/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'], ['\\1_\\2', '\\1_\\2'], $parts[count($parts) - 1]))
+            strtolower(preg_replace([ '/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/' ], [ '\\1_\\2', '\\1_\\2' ], $parts[count($parts) - 1]))
             . '.html.' . $templateFormat;
         $loader = $this->container->get('twig.loader');
-        if (!$loader->exists($template)) {
+        if ( !$loader->exists($template) ) {
             throw new \Exception(sprintf("Non existant view for model: %s, Expecting View at: %s", get_class($this), $template));
         }
+
         return $template;
     }
 
@@ -241,13 +242,13 @@ abstract class ElementModel
      */
     protected function addFlash($type, $message)
     {
-        if (!$this->container->has('session')) {
+        if ( !$this->container->has('session') ) {
             throw new \LogicException('You can not use the addFlash method if sessions are disabled.');
         }
 
         $this->container->get('session')->getFlashBag()->add($type, $message);
     }
-    
+
     /**
      * Checks if the attributes are granted against the current authentication token and optionally supplied object.
      *
@@ -260,7 +261,7 @@ abstract class ElementModel
      */
     protected function isGranted($attributes, $object = null)
     {
-        if (!$this->container->has('security.authorization_checker')) {
+        if ( !$this->container->has('security.authorization_checker') ) {
             throw new \LogicException('The SecurityBundle is not registered in your application.');
         }
 
@@ -278,15 +279,15 @@ abstract class ElementModel
      */
     public function getUser()
     {
-        if (!$this->container->has('security.token_storage')) {
+        if ( !$this->container->has('security.token_storage') ) {
             throw new \LogicException('The SecurityBundle is not registered in your application.');
         }
 
-        if (null === $token = $this->container->get('security.token_storage')->getToken()) {
+        if ( null === $token = $this->container->get('security.token_storage')->getToken() ) {
             return;
         }
 
-        if (!is_object($user = $token->getUser())) {
+        if ( !is_object($user = $token->getUser()) ) {
             // e.g. anonymous authentication
             return;
         }
@@ -318,7 +319,7 @@ abstract class ElementModel
      */
     public function createFormBuilder($data = null, array $options = [])
     {
-        if (method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix')) {
+        if ( method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix') ) {
             $type = 'Symfony\Component\Form\Extension\Core\Type\FormType';
         } else {
             // not using the class name is deprecated since Symfony 2.8 and
