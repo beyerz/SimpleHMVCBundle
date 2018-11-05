@@ -1,30 +1,31 @@
 {
-    "name": "beyerz/simple-hmvc-bundle",
-    "description": "Symfony bundle to support the HMVC design pattern",
-    "type": "symfony-bundle",
-    "authors": [
-        {
-            "name": "Lance Bailey",
-            "homepage": "http://www.me-vs-php.com"
-        }
-    ],
-    "keywords": [
-        "Symfony",
-        "Symfony2",
-        "HMVC",
-        "Hierarchical model view controller"
-    ],
-    "license": "MIT",
-    "require": {
-        "php": ">=5.5",
-        "symfony/symfony": "2.8.*"
-    },
-    "require-dev" :{
-        "symfony/phpunit-bridge": "~3"
-    },
-    "autoload": {
-        "psr-4": {
-            "Beyerz\\SimpleHMVCBundle\\": ""
-        }
+  "name": "beyerz/simple-hmvc-bundle",
+  "description": "Symfony bundle to support the HMVC design pattern",
+  "type": "symfony-bundle",
+  "authors": [
+    {
+      "name": "Lance Bailey",
+      "homepage": "http://www.me-vs-php.com"
     }
+  ],
+  "keywords": [
+    "Symfony",
+    "Symfony2",
+    "HMVC",
+    "Hierarchical model view controller"
+  ],
+  "license": "MIT",
+  "require": {
+    "php": ">=5.6",
+    "symfony/symfony": "2.8.*|3.0.*|3.1.*|3.2.*|3.3.*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.0|^7.0",
+    "symfony/phpunit-bridge": "~3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Beyerz\\SimpleHMVCBundle\\": ""
+    }
+  }
 }
